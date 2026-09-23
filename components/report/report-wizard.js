@@ -25,7 +25,7 @@ async function api(url, body) {
 }
 
 export default function ReportWizard() {
-  const { user, login, refresh, notify } = usePortal();
+  const { user, loading, login, refresh, notify } = usePortal();
   const { register, watch, getValues, setValue, reset, trigger, formState: { errors } } = useForm({ resolver: zodResolver(schema), defaultValues: defaults });
   const values = watch();
   const [step, setStep] = useState(0), [location, setLocation] = useState(null), [evidence, setEvidence] = useState([]), [answers, setAnswers] = useState({}), [history, setHistory] = useState([]), [analysis, setAnalysis] = useState(null), [source, setSource] = useState('demo'), [question, setQuestion] = useState(null), [answer, setAnswer] = useState(''), [busy, setBusy] = useState(''), [error, setError] = useState(''), [submitted, setSubmitted] = useState(null), [ready, setReady] = useState(false), [restored, setRestored] = useState(false);
@@ -127,7 +127,9 @@ export default function ReportWizard() {
 
   const LoginCard = () => <div className="report-login"><div className="report-login-icon"><Users size={20} /></div><div><strong>Sign in to continue</strong><p>Sign in to your account to submit a challenge and track its progress.</p></div><Link href="/login" className="report-primary" style={{marginLeft: 'auto'}}>Sign In <ArrowRight size={14} /></Link></div>;
 
-  if (ready && !user) {
+  if (!ready || loading) return <div className="page-skeleton"><div /><div /><div /><div /></div>;
+
+  if (!user) {
     return (
       <div className="report-page">
         <div className="report-breadcrumb"><Link href="/">Home</Link><ChevronRight size={13} /><span>Report a problem</span></div>
