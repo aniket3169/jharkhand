@@ -10,7 +10,8 @@
     "test": "node --test tests/*.test.js"
   },
   "dependencies": {
-    "@google-cloud/storage": "^7.16.0",
+    "@aws-sdk/client-s3": "^3.1138.0",
+    "@aws-sdk/s3-request-presigner": "^3.1138.0",
     "@google/genai": "^1.0.0",
     "@hookform/resolvers": "^5.0.0",
     "@radix-ui/react-dialog": "^1.1.6",
