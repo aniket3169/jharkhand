@@ -67,10 +67,14 @@ export function MediaUploader({ value = [], onChange, phase = 'before', problemI
         } catch { /* Most media does not contain GPS metadata. */ }
       }
       const ticket = await requestJson('/api/upload/url', { fileName: item.file.name, contentType: item.file.type, size: item.file.size, phase: item.file.type.startsWith('image/') || item.file.type.startsWith('video/') ? phase : 'supporting', problemId });
-      if (ticket.mode === 'demo') {
-        await saveLocalMedia(ticket.id, item.file); update(item.key, { progress: 90 });
-      } else if (ticket.uploadUrl) await uploadToCloud(ticket.uploadUrl, item.file, ticket.headers, progress => update(item.key, { progress }));
-      else throw new Error('Storage is unavailable. Please try again.');
+      if (ticket.uploadUrl) {
+        await uploadToCloud(ticket.uploadUrl, item.file, ticket.headers, progress => update(item.key, { progress }));
+      } else if (ticket.mode === 'demo') {
+        update(item.key, { progress: 90 });
+      } else {
+        throw new Error('Storage is unavailable. Please try again.');
+      }
+      try { await saveLocalMedia(ticket.id, item.file); } catch { /* Local browser store optional */ }
       const { media } = await requestJson('/api/upload/complete', { id: ticket.id, location: mediaLocation, localId: ticket.mode === 'demo' ? ticket.id : undefined });
       const complete = { ...media, id: media.id || ticket.id, name: media.name || item.file.name, type: media.type || item.file.type, size: media.size || item.file.size, phase, source: item.captureLocation ? 'capture' : 'upload', exifAvailable, location: media.location || mediaLocation, localId: ticket.mode === 'demo' ? ticket.id : media.localId, previewUrl: item.previewUrl, uploadStatus: 'complete' };
       onChange([...latest.current, complete]);
