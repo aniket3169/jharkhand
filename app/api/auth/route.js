@@ -18,7 +18,10 @@ export const POST = api(async (request) => {
     let user;
     if (body.action === "register") {
       if (typeof body.name !== "string" || body.name.trim().length < 2 || body.name.trim().length > 80) throw new ApiError("Enter a name between 2 and 80 characters.");
-      user = await createAccount({ name: body.name.trim(), email, passwordHash: await hashPassword(body.password) });
+      const allowedRoles = ["citizen", "authority", "university", "industry", "ngo"];
+      const role = allowedRoles.includes(body.role) ? body.role : "citizen";
+      const organization = typeof body.organization === "string" && body.organization.trim().length > 0 ? body.organization.trim() : "Community member";
+      user = await createAccount({ name: body.name.trim(), email, passwordHash: await hashPassword(body.password), role, organization });
     } else {
       const account = await accountByEmail(email);
       const valid = await verifyPassword(body.password, account?.passwordHash || "000000000000000000000000000000000000000000000000:00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");

@@ -9,7 +9,7 @@ import { ApiError, parse, problemSchema, locationSchema } from "../lib/validatio
 import { getLocationVerificationStatus } from "../lib/location.js";
 
 const runtime = globalThis.__jhRepository ||= { queue: Promise.resolve() };
-const DATA_FILE = path.join(process.env.DATA_DIRECTORY || path.join(process.cwd(), ".data"), "portal.json");
+const DATA_FILE = path.join(process.env.DATA_DIRECTORY || (process.env.NODE_ENV === "production" ? "/tmp" : path.join(process.cwd(), ".data")), "portal.json");
 const now = () => new Date().toISOString();
 const id = () => randomUUID();
 const clone = (value) => structuredClone(value);
@@ -221,11 +221,11 @@ export async function readNotifications(body, user) { return mutate((store) => {
 export async function getAudit(user) { if (user.role !== "admin") throw new ApiError("Administrator access required.", 403); return (await read()).audit; }
 export async function getOrganizations() { return { universities, partners }; }
 
-export async function createAccount({ name, email, passwordHash }) {
+export async function createAccount({ name, email, passwordHash, role = "citizen", organization = "Community member" }) {
   return mutate((store) => {
     store.users ||= [];
     if (store.users.some((user) => user.email === email)) throw new ApiError("An account with this email already exists.", 409);
-    const account = { id: `citizen-${id()}`, name, email, passwordHash, role: "citizen", organization: "Community member", organizationId: null, createdAt: now(), demo: false };
+    const account = { id: `${role}-${id()}`, name, email, passwordHash, role, organization, organizationId: null, createdAt: now(), demo: false };
     store.users.push(account);
     const { passwordHash: omitted, ...user } = account;
     store.notifications.unshift({ id: id(), userId: user.id, title: "Welcome to Jharkhand Innovation Connect", message: "Your account is ready. Report a local challenge or explore community projects.", date: now(), read: false, href: "/report", type: "info" });
