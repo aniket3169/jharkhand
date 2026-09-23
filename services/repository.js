@@ -2,7 +2,7 @@ import "server-only";
 import { mkdir, readFile, writeFile, rename } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
-import { seedProblems, initialNotifications, defaultSettings, universities, partners, priorities } from "../data/seed.js";
+import { seedProblems, initialNotifications, defaultSettings, universities, partners, priorities, seedUsers } from "../data/seed.js";
 import { isDemoMode } from "../lib/server-auth.js";
 import { canPerform, canTransition, isAuthority, canAccessExactLocation, redactProblem } from "../lib/permissions.js";
 import { ApiError, parse, problemSchema, locationSchema } from "../lib/validation.js";
@@ -18,7 +18,7 @@ async function readStore() {
   try { return JSON.parse(await readFile(DATA_FILE, "utf8")); }
   catch (error) {
     if (error.code !== "ENOENT") throw error;
-    return { version: 1, problems: isDemoMode() ? clone(seedProblems) : [], notifications: isDemoMode() ? clone(initialNotifications) : [], settings: clone(defaultSettings), audit: [], uploads: {}, users: [], nextNumber: 1285 };
+    return { version: 1, problems: isDemoMode() ? clone(seedProblems) : [], notifications: isDemoMode() ? clone(initialNotifications) : [], settings: clone(defaultSettings), audit: [], uploads: {}, users: clone(seedUsers), nextNumber: 1285 };
   }
 }
 

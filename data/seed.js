@@ -21,6 +21,11 @@ export const partners = [
 export const statusOptions = ["Submitted", "Under review", "Needs information", "Validated", "Assigned", "Solution proposed", "In progress", "Pilot testing", "Implementation", "Awaiting verification", "Resolved", "Closed", "Rejected"];
 export const priorities = ["Low", "Medium", "High", "Critical"];
 
+export const seedUsers = [
+  { id: "citizen-demo1", name: "Aniket", email: "salve.as@somaiya.edu", passwordHash: "4e11ac857e5aec160c72424059b2a7c9c38fe5ee70f8c88f:f7d7fa2bb1079dd2d3513e71cb127465840e6ef5045974d46caf4be20cafa8ca340547cc3b337fbce17e911c92437b3c45178ce413d3d149722371bfea1e25ba", role: "citizen", organization: "Community member", organizationId: null, createdAt: new Date().toISOString(), demo: false },
+  { id: "admin-demo2", name: "Aniket Admin", email: "aniketsalve.model@gmail.com", passwordHash: "4e11ac857e5aec160c72424059b2a7c9c38fe5ee70f8c88f:f7d7fa2bb1079dd2d3513e71cb127465840e6ef5045974d46caf4be20cafa8ca340547cc3b337fbce17e911c92437b3c45178ce413d3d149722371bfea1e25ba", role: "admin", organization: "Innovation Hub", organizationId: null, createdAt: new Date().toISOString(), demo: false }
+];
+
 const photos = {
   water: "https://images.unsplash.com/photo-1541544181051-e46607bc22a4?auto=format&fit=crop&w=1200&q=85",
   agriculture: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=85",
